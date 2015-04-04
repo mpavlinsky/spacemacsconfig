@@ -133,13 +133,26 @@ layers configuration."
 
   ;; Any prefix key, "\x" can also be triggered with the key chord "jx"
   (key-chord-define evil-normal-state-map "jk" 'keyboard-quit)
+  
+  ;; (eval-after-load 'magit
+  ;;   '(progn
+  ;;      (evil-define-key 'emacs magit-commit-mode-map
+  ;;        "k" 'magit-goto-previous-section
+  ;;        "j" 'magit-goto-next-section)
+  ;;      (evil-define-key 'emacs magit-log-mode-map
+  ;;        "k" 'magit-goto-previous-section
+  ;;        "j" 'magit-goto-next-section)
+  ;;      (evil-define-key 'emacs magit-process-mode-map
+  ;;        "k" 'magit-goto-previous-section
+  ;;        "j" 'magit-goto-next-section)
+  ;;      (evil-define-key 'emacs magit-branch-manager-mode-map
+  ;;        "k" 'magit-goto-previous-section
+  ;;        "j" 'magit-goto-next-section)
+  ;;      (evil-define-key 'emacs magit-status-mode-map
+  ;;        "k" 'magit-goto-previous-section
+  ;;        "j" 'magit-goto-next-section)
+  ;;      ))
 
-  (eval-after-load 'magit
-    '(progn
-       (evil-define-key 'emacs magit-status-mode-map "k" 'magit-goto-previous-section
-         "j" 'magit-goto-next-section)))
-  ;; Magit
-  ;; "q" always kills magit buffers
   (setq-default omnisharp-server-executable-path "~/Projects/Misc/OmniSharpServer/OmniSharp/bin/Debug/OmniSharp.exe")
 
   ;; Helm
