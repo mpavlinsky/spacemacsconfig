@@ -1,5 +1,4 @@
-;; -*- mode: dotspacemacs -*-
-;; This file is loaded by Spacemacs at startup.
+;; -*- mode: dotspacemacs -*- ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
 (defun dotspacemacs/layers ()
@@ -10,13 +9,19 @@
    dotspacemacs-configuration-layer-path '("~/.spacemacscontrib/")
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
-   dotspacemacs-configuration-layers '(git csharp key-chord themes-megapack mythemes)
+   dotspacemacs-configuration-layers '(git
+                                       csharp
+                                       key-chord
+                                       themes-megapack
+                                       mythemes
+                                       javascript
+                                       auto-completion)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'
-   dotspacemacs-delete-orphan-packages t))
+   dotspacemacs-delete-orphan-packages nil))
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -43,7 +48,7 @@ before layers configuration."
                                :size 16
                                :weight normal
                                :width normal
-                               :powerline-scale 1.1)
+                               :powerline-scale 1.5)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; Major mode leader key is a shortcut key which is the equivalent of
@@ -100,36 +105,38 @@ before layers configuration."
   "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
+
+  (setq powerline-default-separator 'nil)
   ;; Use j and k pressed within .15 seconds to exit insert mode
-  (defun mp-evil-maybe-exit (entry-key exit-key)
-    (let ((modified (buffer-modified-p)))
-      (insert entry-key)
-      (let ((evt (read-event nil nil 0.15)))
-        (cond
-         ((null evt) (message ""))
-         ((and (integerp evt) (char-equal evt exit-key))
-          (delete-char -1)
-          (set-buffer-modified-p modified)
-          (push 'escape unread-command-events))
-         (t (push evt unread-command-events))))))
+  ;; (defun mp-evil-maybe-exit (entry-key exit-key)
+  ;;   (let ((modified (buffer-modified-p)))
+  ;;     (insert entry-key)
+  ;;     (let ((evt (read-event nil nil 0.15)))
+  ;;       (cond
+  ;;        ((null evt) (message ""))
+  ;;        ((and (integerp evt) (char-equal evt exit-key))
+  ;;         (delete-char -1)
+  ;;         (set-buffer-modified-p modified)
+  ;;         (push 'escape unread-command-events))
+  ;;        (t (push evt unread-command-events))))))
 
-  (evil-define-command mp-evil-maybe-exit-j ()
-    :repeat change
-    (interactive)
-    (mp-evil-maybe-exit ?j ?k))
-  (define-key evil-insert-state-map "j" 'mp-evil-maybe-exit-j)
+  ;; (evil-define-command mp-evil-maybe-exit-j ()
+  ;;   :repeat change
+  ;;   (interactive)
+  ;;   (mp-evil-maybe-exit ?j ?k))
+  ;; (define-key evil-insert-state-map "j" 'mp-evil-maybe-exit-j)
 
-  (evil-define-command mp-evil-maybe-exit-k ()
-    :repeat change
-    (interactive)
-    (mp-evil-maybe-exit ?k ?j))
-  (define-key evil-insert-state-map "k" 'mp-evil-maybe-exit-k)
+  ;; (evil-define-command mp-evil-maybe-exit-k ()
+  ;;   :repeat change
+  ;;   (interactive)
+  ;;   (mp-evil-maybe-exit ?k ?j))
+  ;; (define-key evil-insert-state-map "k" 'mp-evil-maybe-exit-k)
 
-  (key-chord-mode 1)
-  (setq key-chord-two-keys-delay 0.05)
+  ;; (key-chord-mode 1)
+  ;; (setq key-chord-two-keys-delay 0.05)
 
-  ;; Any prefix key, "\x" can also be triggered with the key chord "jx"
-  (key-chord-define evil-normal-state-map "jk" 'keyboard-quit)
+  ;; ;; Any prefix key, "\x" can also be triggered with the key chord "jx"
+  ;; (key-chord-define evil-normal-state-map "jk" 'keyboard-quit)
   
   ;; (eval-after-load 'magit
   ;;   '(progn
@@ -152,19 +159,19 @@ layers configuration."
 
   (setq-default omnisharp-server-executable-path "~/Projects/Misc/OmniSharpServer/OmniSharp/bin/Debug/OmniSharp.exe")
 
-  ;; Helm
-  (eval-after-load 'helm
-    '(progn
-       (define-key helm-map (kbd "s-j") 'helm-next-line)
-       (define-key helm-map (kbd "s-k") 'helm-previous-line)))
+  ;; ;; Helm
+  ;; (eval-after-load 'helm
+  ;;   '(progn
+  ;;      (define-key helm-map (kbd "s-j") 'helm-next-line)
+  ;;      (define-key helm-map (kbd "s-k") 'helm-previous-line)))
 
-  ;; IDO
-  (defun bind-ido-keys ()
-  "Keybindings for ido mode."
-  (define-key ido-completion-map (kbd "s-j") 'ido-next-match)
-  (define-key ido-completion-map (kbd "s-k") 'ido-prev-match))
+  ;; ;; IDO
+  ;; (defun bind-ido-keys ()
+  ;; "Keybindings for ido mode."
+  ;; (define-key ido-completion-map (kbd "s-j") 'ido-next-match)
+  ;; (define-key ido-completion-map (kbd "s-k") 'ido-prev-match))
 
-  (add-hook 'ido-setup-hook #'bind-ido-keys)
+  ;; (add-hook 'ido-setup-hook #'bind-ido-keys)
 
 
 
