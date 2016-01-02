@@ -1,0 +1,6 @@
+(defun mputils/note ()
+  (interactive)
+  (let* ((note-header (format "[%s:%d]" (file-name-nondirectory (buffer-file-name)) (line-number-at-pos)))
+         (prompt (format "Note on %s: " note-header))
+         (text (format "\n%s %s" note-header (read-from-minibuffer prompt))))
+    (append-to-file text nil "~/emacsnotes.txt")))

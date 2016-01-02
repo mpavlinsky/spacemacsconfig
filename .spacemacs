@@ -1,28 +1,51 @@
-;; -*- mode: dotspacemacs -*- ;; This file is loaded by Spacemacs at startup.
+;; -*- mode: emacs-lisp -*-
+;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration."
   (setq-default
    ;; List of additional paths where to look for configuration layers.
-   ;; Paths must have a trailing slash (ie. `~/.mycontribs/')
+   ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path '("~/.spacemacscontrib/")
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
-   dotspacemacs-configuration-layers '(git
-                                       csharp
-                                       key-chord
-                                       themes-megapack
-                                       mythemes
-                                       javascript
-                                       osx
-                                       auto-completion)
+   dotspacemacs-configuration-layers
+   '(
+     ;; ----------------------------------------------------------------
+     ;; Example of useful layers you may want to use right away.
+     ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
+     ;; <M-m f e R> (Emacs style) to install them.
+     ;; ----------------------------------------------------------------
+     auto-completion
+     better-defaults
+     emacs-lisp
+     csharp
+     key-chord
+     themes-megapack
+     mythemes
+     javascript
+     osx
+     markdown
+     git
+     (shell :variables
+            shell-default-height 30
+            shell-default-position 'bottom)
+     syntax-checking
+     version-control
+     mputils
+     )
+   ;; List of additional packages that will be installed without being
+   ;; wrapped in a layer. If you need some configuration for these
+   ;; packages then consider to create a layer, you can also put the
+   ;; configuration in `dotspacemacs/config'.
+   dotspacemacs-additional-packages '()
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'
-   dotspacemacs-delete-orphan-packages nil))
+   dotspacemacs-delete-orphan-packages t))
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -31,16 +54,27 @@ before layers configuration."
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
-   ;; Specify the startup banner. If the value is an integer then the
-   ;; banner with the corresponding index is used, if the value is `random'
-   ;; then the banner is chosen randomly among the available banners, if
-   ;; the value is nil then no banner is displayed.
-   dotspacemacs-startup-banner 'random
+   ;; Either `vim' or `emacs'. Evil is always enabled but if the variable
+   ;; is `emacs' then the `holy-mode' is enabled at startup.
+   dotspacemacs-editing-style 'vim
+   ;; If non nil output loading progress in `*Messages*' buffer.
+   dotspacemacs-verbose-loading nil
+   ;; Specify the startup banner. Default value is `official', it displays
+   ;; the official spacemacs logo. An integer value is the index of text
+   ;; banner, `random' chooses a random text banner in `core/banners'
+   ;; directory. A string value must be a path to an image format supported
+   ;; by your Emacs build.
+   ;; If the value is nil then no banner is displayed.
+   dotspacemacs-startup-banner 'official
+   ;; List of items to show in the startup buffer. If nil it is disabled.
+   ;; Possible values are: `recents' `bookmarks' `projects'."
+   dotspacemacs-startup-lists '(recents projects)
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(monokai)
-   
+   dotspacemacs-themes '(
+                         monokai
+                         )
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -52,14 +86,29 @@ before layers configuration."
                                :powerline-scale 1.5)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
+   ;; The leader key accessible in `emacs state' and `insert state'
+   dotspacemacs-emacs-leader-key "M-m"
    ;; Major mode leader key is a shortcut key which is the equivalent of
-   ;; pressing `<leader> m`
+   ;; pressing `<leader> m`. Set it to `nil` to disable it.
    dotspacemacs-major-mode-leader-key ","
+   ;; Major mode leader key accessible in `emacs state' and `insert state'
+   dotspacemacs-major-mode-emacs-leader-key "C-M-m"
    ;; The command key used for Evil commands (ex-commands) and
    ;; Emacs commands (M-x).
    ;; By default the command key is `:' so ex-commands are executed like in Vim
    ;; with `:' and Emacs commands are executed with `<leader> :'.
    dotspacemacs-command-key ":"
+   ;; Location where to auto-save files. Possible values are `original' to
+   ;; auto-save the file in-place, `cache' to auto-save the file to another
+   ;; file stored in the cache directory and `nil' to disable auto-saving.
+   ;; Default value is `cache'.
+   dotspacemacs-auto-save-file-location 'cache
+   ;; If non nil then `ido' replaces `helm' for some commands. For now only
+   ;; `find-files' (SPC f f) is replaced.
+   dotspacemacs-use-ido nil
+   ;; If non nil the paste micro-state is enabled. When enabled pressing `p`
+   ;; several times cycle between the kill ring content.
+   dotspacemacs-enable-paste-micro-state nil
    ;; Guide-key delay in seconds. The Guide-key is the popup buffer listing
    ;; the commands bound to the current keystrokes.
    dotspacemacs-guide-key-delay 0.4
@@ -76,7 +125,7 @@ before layers configuration."
    ;; If non nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup t
+   dotspacemacs-maximized-at-startup nil
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'.
@@ -93,97 +142,39 @@ before layers configuration."
    dotspacemacs-smooth-scrolling t
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    dotspacemacs-smartparens-strict-mode nil
+   ;; Select a scope to highlight delimiters. Possible value is `all',
+   ;; `current' or `nil'. Default is `all'
+   dotspacemacs-highlight-delimiters 'all
    ;; If non nil advises quit functions to keep server open when quitting.
    dotspacemacs-persistent-server nil
+   ;; List of search tool executable names. Spacemacs uses the first installed
+   ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
+   dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now.
-   dotspacemacs-default-package-repository nil)
+   dotspacemacs-default-package-repository nil
+   dotspacemacs-which-key-position 'right
+   )
   ;; User initialization goes here
   )
 
+(defun full-auto-save ()
+  (interactive)
+  (save-excursion
+		(dolist (buf (buffer-list))
+		  (set-buffer buf)
+		  (if (and (buffer-file-name) (buffer-modified-p))
+          (basic-save-buffer)))))
+
 (defun dotspacemacs/config ()
+  (setq auto-save-default t)
+  (setq guide-key/popup-window-position :right)
+  (add-hook 'auto-save-hook 'full-auto-save)
   "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
-
-  (setq powerline-default-separator 'nil)
-  ;; Use j and k pressed within .15 seconds to exit insert mode
-  ;; (defun mp-evil-maybe-exit (entry-key exit-key)
-  ;;   (let ((modified (buffer-modified-p)))
-  ;;     (insert entry-key)
-  ;;     (let ((evt (read-event nil nil 0.15)))
-  ;;       (cond
-  ;;        ((null evt) (message ""))
-  ;;        ((and (integerp evt) (char-equal evt exit-key))
-  ;;         (delete-char -1)
-  ;;         (set-buffer-modified-p modified)
-  ;;         (push 'escape unread-command-events))
-  ;;        (t (push evt unread-command-events))))))
-
-  ;; (evil-define-command mp-evil-maybe-exit-j ()
-  ;;   :repeat change
-  ;;   (interactive)
-  ;;   (mp-evil-maybe-exit ?j ?k))
-  ;; (define-key evil-insert-state-map "j" 'mp-evil-maybe-exit-j)
-
-  ;; (evil-define-command mp-evil-maybe-exit-k ()
-  ;;   :repeat change
-  ;;   (interactive)
-  ;;   (mp-evil-maybe-exit ?k ?j))
-  ;; (define-key evil-insert-state-map "k" 'mp-evil-maybe-exit-k)
-
-  ;; (key-chord-mode 1)
-  ;; (setq key-chord-two-keys-delay 0.05)
-
-  ;; ;; Any prefix key, "\x" can also be triggered with the key chord "jx"
-  ;; (key-chord-define evil-normal-state-map "jk" 'keyboard-quit)
-  
-  ;; (eval-after-load 'magit
-  ;;   '(progn
-  ;;      (evil-define-key 'emacs magit-commit-mode-map
-  ;;        "k" 'magit-goto-previous-section
-  ;;        "j" 'magit-goto-next-section)
-  ;;      (evil-define-key 'emacs magit-log-mode-map
-  ;;        "k" 'magit-goto-previous-section
-  ;;        "j" 'magit-goto-next-section)
-  ;;      (evil-define-key 'emacs magit-process-mode-map
-  ;;        "k" 'magit-goto-previous-section
-  ;;        "j" 'magit-goto-next-section)
-  ;;      (evil-define-key 'emacs magit-branch-manager-mode-map
-  ;;        "k" 'magit-goto-previous-section
-  ;;        "j" 'magit-goto-next-section)
-  ;;      (evil-define-key 'emacs magit-status-mode-map
-  ;;        "k" 'magit-goto-previous-section
-  ;;        "j" 'magit-goto-next-section)
-  ;;      ))
-
-  (setq-default omnisharp-server-executable-path "~/Projects/Misc/OmniSharpServer/OmniSharp/bin/Debug/OmniSharp.exe")
-
-  ;; ;; Helm
-  ;; (eval-after-load 'helm
-  ;;   '(progn
-  ;;      (define-key helm-map (kbd "s-j") 'helm-next-line)
-  ;;      (define-key helm-map (kbd "s-k") 'helm-previous-line)))
-
-  ;; ;; IDO
-  ;; (defun bind-ido-keys ()
-  ;; "Keybindings for ido mode."
-  ;; (define-key ido-completion-map (kbd "s-j") 'ido-next-match)
-  ;; (define-key ido-completion-map (kbd "s-k") 'ido-prev-match))
-
-  ;; (add-hook 'ido-setup-hook #'bind-ido-keys)
-
-
-
-
-
-
-
-
-  )
-
-
+)
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
